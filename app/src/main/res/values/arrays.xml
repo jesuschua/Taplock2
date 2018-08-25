@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinnerItems">
+        <item>Happy Birthday to You</item>
+        <item>London Bridge is Falling Down</item>
+        <item>Mary Had a Little Lamb</item>
+    </string-array>
+</resources>
