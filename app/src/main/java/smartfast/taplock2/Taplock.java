@@ -72,7 +72,10 @@ public class Taplock extends AppCompatActivity {
                     if (setSwitch.isChecked()){
                         tapButton.setImageResource(R.drawable.lock_new);
                         tapButton.setColorFilter(Color.BLUE);
-                        printer.PrintStr("Tap your song and press unlcck");
+                        if (toggleButton.isChecked()){
+                            printer.PrintStr("Tap your song to add a sample key");
+                        }
+                        else printer.PrintStr("Tap your song and press unlock");
                     }
                     else{
                         //tapButton.setImageResource(R.drawable.lock_new);
@@ -102,12 +105,14 @@ public class Taplock extends AppCompatActivity {
                             if (KeyArr.size() == 0){
                                 saveSig.Save(tapArr);
                                 //printer.PrintStr( "Tap signature saved");
+                                printer.PrintStr(""); //SAVED;
                                 saveSig.UpdateSaveCounter();
                             }
                             else{
                                 if (valTap.ValidateArr(tapArr,KeyArr.getLast())){
                                     saveSig.Save(tapArr);
                                     //printer.PrintStr("Tap signature saved");
+                                    printer.PrintStr(""); //SAVED;
                                     saveSig.UpdateSaveCounter();
                                 }
                                 else{
@@ -129,27 +134,30 @@ public class Taplock extends AppCompatActivity {
                                     if (validate.validateSigma(tapArr)){
                                         tapButton.setImageResource(R.drawable.unlock_new);
                                         tapButton.setColorFilter(Color.GREEN);
-                                        printer.PrintStr("OPEN");
+                                        printer.PrintStr(""); //OPEN
+                                        saveSig.Save(tapArr);
+                                        //printer.PrintStr("Tap signature saved");
+                                        saveSig.UpdateSaveCounter();
                                     }
                                     else{
                                         tapButton.startAnimation(animShake);
-                                        //printer.PrintStr("Tap signature does not match");
+                                        printer.PrintStr(""); //CLOSE;
                                     }
                                 }
                                 else{
                                     tapButton.startAnimation(animShake);
-                                    printer.PrintStr("Tap signature does not match");
+                                    printer.PrintStr(""); //CLOSE;
                                 }
                             }
                             else{
                                 if (validate.ValidateArr(tapArr,RefSongArr)){
                                     tapButton.setImageResource(R.drawable.unlock_new);
                                     tapButton.setColorFilter(Color.GREEN);
-                                    printer.PrintStr("OPEN");
+                                    printer.PrintStr(""); //OPEN
                                 }
                                 else{
                                     tapButton.startAnimation(animShake);
-                                    printer.PrintStr("Tap signature does not match");
+                                    printer.PrintStr(""); //CLOSE
                                 }
                             }
 
@@ -160,7 +168,7 @@ public class Taplock extends AppCompatActivity {
                         else {
                         tapButton.setImageResource(R.drawable.lock_new);
                         tapButton.startAnimation(animShake);
-                        printer.PrintStr("Locked");
+                        printer.PrintStr(""); //CLOSE;
                     }
                     }
             };
@@ -273,11 +281,14 @@ public class Taplock extends AppCompatActivity {
                 }
                 result = true;
             }
-            printer.PrintStr("Max:" + String.valueOf(stdKeyMaxSigma) + "\n" + "Input:" + String.valueOf(cKey) + "\n" +"Max:" + String.valueOf(stdKeyMinSigma));
+            //printer.PrintStr("Max:" + String.valueOf(stdKeyMaxSigma) + "\n" + "Input:" + String.valueOf(cKey) + "\n" +"Min:" + String.valueOf(stdKeyMinSigma));
             return result;
         }
 
         public void MakeStdKey (LinkedList<ArrayList<Long>> sourceKey){
+            stdKeyMaxSigma = new ArrayList<Long>();
+            stdKeyMinSigma = new ArrayList<Long>();
+            stdKeySum = 0;
             ArrayList<Long> stdKeyArr = new ArrayList<Long>();
             ArrayList<Long> stdDevArr = new ArrayList<Long>();
             LinkedList<ArrayList<Long>> stdKeyDevArr = new LinkedList<ArrayList<Long>>();
@@ -311,7 +322,7 @@ public class Taplock extends AppCompatActivity {
             useSigma = true;
             PrintMe printer = new PrintMe();
             //printer.PrintStr(String.valueOf(stdKeyDevArr));
-            printer.PrintStr("Sigma Checking: ON" + "\n" + "STD.KEYSUM:" + String.valueOf(stdKeySum)+ "\n" + "STD. DEVIATION:" + String.valueOf(stdDevArr) + "\n" + "Max:" +  String.valueOf(stdKeyMaxSigma) + "\n" + "Min:" + String.valueOf(stdKeyMinSigma));
+            //printer.PrintStr("Sigma Checking: ON" + "\n" + "STD.KEYSUM:" + String.valueOf(stdKeySum)+ "\n" + "STD. DEVIATION:" + String.valueOf(stdDevArr) + "\n" + "Max:" +  String.valueOf(stdKeyMaxSigma) + "\n" + "Min:" + String.valueOf(stdKeyMinSigma));
         }
     }
 
@@ -321,7 +332,7 @@ public class Taplock extends AppCompatActivity {
         public void Save(ArrayList<Long> sig){
             if (KeyArr.size() < 3){
                 KeyArr.add(sig);
-                printer.PrintStr(String.valueOf(KeyArr.size() + " " + sig));
+                //printer.PrintStr(String.valueOf(KeyArr.size() + " " + sig));
                 if (KeyArr.size() == 3){
                     makeKey.MakeStdKey(KeyArr);
                 }
@@ -329,7 +340,7 @@ public class Taplock extends AppCompatActivity {
             else{
                 KeyArr.pollFirst();
                 KeyArr.add(sig);
-                printer.PrintStr(String.valueOf(KeyArr.size() + " " + sig));
+                //printer.PrintStr(String.valueOf(KeyArr.size() + " " + sig));
                 if (KeyArr.size() == 3){
                     makeKey.MakeStdKey(KeyArr);
                 }
